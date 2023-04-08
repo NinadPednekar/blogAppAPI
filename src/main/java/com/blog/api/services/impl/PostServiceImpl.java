@@ -10,8 +10,12 @@ import com.blog.api.repos.CategoryRepo;
 import com.blog.api.repos.PostRepo;
 import com.blog.api.repos.UserRepo;
 import com.blog.api.services.PostService;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -60,8 +64,10 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<PostDto> getAllPosts() {
-        List<Post> posts = this.postRepo.findAll();
+    public List<PostDto> getAllPosts(Integer pageNumber, Integer pageSize) {
+        Pageable p = PageRequest.of(pageNumber, pageSize);
+        Page<Post> pagePosts = this.postRepo.findAll(p);
+        List<Post> posts = pagePosts.getContent();
         List<PostDto> postDtos = posts.stream().map((post -> this.modelMapper.map(post, PostDto.class))).collect(Collectors.toList());
         return postDtos;
     }
