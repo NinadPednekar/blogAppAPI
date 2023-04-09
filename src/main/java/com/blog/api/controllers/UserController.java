@@ -3,14 +3,13 @@ package com.blog.api.controllers;
 import com.blog.api.payloads.ApiResponse;
 import com.blog.api.payloads.UserDto;
 import com.blog.api.services.UserService;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/users")

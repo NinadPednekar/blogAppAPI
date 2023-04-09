@@ -7,16 +7,13 @@ import lombok.Setter;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "COMMENTS")
+@Table(name = "ROLES")
 @NoArgsConstructor
 @Setter
 @Getter
-public class Comment {
+public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private String content;
-    @ManyToOne
-    private Post post;
-
+    private String name;
 }
