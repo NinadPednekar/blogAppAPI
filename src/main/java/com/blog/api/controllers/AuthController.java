@@ -1,13 +1,17 @@
 package com.blog.api.controllers;
 
+import com.blog.api.exc.ApiException;
+import com.blog.api.payloads.UserDto;
 import com.blog.api.security.CustomUserDetailService;
 import com.blog.api.security.JWTAuthRequest;
 import com.blog.api.security.JWTAuthResponse;
 import com.blog.api.security.JWTTokenHelper;
+import com.blog.api.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,6 +29,8 @@ public class AuthController {
     private CustomUserDetailService customUserDetailService;
     @Autowired
     private AuthenticationManager authenticationManager;
+    @Autowired
+    private UserService userService;
     @PostMapping("/login")
     public ResponseEntity<JWTAuthResponse> createToken(@RequestBody JWTAuthRequest request){
         this.authenticate(request.getUsername() ,request.getPassword());
@@ -35,9 +41,23 @@ public class AuthController {
         return new ResponseEntity<JWTAuthResponse>(jwtAuthResponse, HttpStatus.OK);
     }
 
+    //register new user api
+    @PostMapping("/register")
+    public ResponseEntity<UserDto> registerUser(@RequestBody UserDto userDto){
+        UserDto registeredUser = this.userService.registerUser(userDto);
+        return new ResponseEntity<UserDto>(registeredUser, HttpStatus.CREATED);
+    }
+
     private void authenticate(String usernme, String password){
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(usernme, password);
-        this.authenticationManager.authenticate(usernamePasswordAuthenticationToken);
+
+
+        try{
+            this.authenticationManager.authenticate(usernamePasswordAuthenticationToken);
+        } catch (BadCredentialsException e){
+            System.out.println("Invalid details !");
+            throw new ApiException("Invalid username or password");
+        }
     }
 
 }
