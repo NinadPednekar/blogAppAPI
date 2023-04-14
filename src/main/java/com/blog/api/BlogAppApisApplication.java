@@ -37,11 +37,11 @@ public class BlogAppApisApplication implements CommandLineRunner {
 		try {
 			Role role = new Role();
 			role.setId(AppConstants.ADMIN_USER);
-			role.setName("ADMIN");
+			role.setName("ROLE_ADMIN");
 
 			Role role1 = new Role();
 			role1.setId(AppConstants.NORMAL_USER);
-			role1.setName("NORMAL");
+			role1.setName("ROLE_NORMAL");
 
 			List<Role> roles = List.of(role, role1);
 			List<Role> savedRoles = this.roleRepo.saveAll(roles);
